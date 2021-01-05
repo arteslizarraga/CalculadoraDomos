@@ -10,26 +10,42 @@
 	<tr style="background-color: #a89292; ">
 		<td>  
 			Frecuencia:
-			<select id="cbx_frecuencia_domo" onchange="calcularDomoV8();">
+			<select id="cbx_frecuencia_domo" onchange="calcularDomo();">
 				<option value="V4"> V4 </option>
 				<option value="V6"> V6 </option>
 				<option value="V8" selected> V8 </option>
 			</select>
 		</td>
 		<td> 
-			Diámetro del domo
-			<input id="txt_diametro" value="13.00" onchange="calcularDomoV8();"> 
-
-			<br/>
-
-			Redondear resultados:
-			<select id="cbx_redondear_resultados" onchange="calcularDomoV8();">
-				<option value="si"> si </option>
-				<option value="no" selected> no </option>
-			</select>
-			
+			<table>
+				<tr>
+					<td> Diámetro del domo: </td>
+					<td> 
+						<input id="txt_diametro" value="13.00"> 
+					</td>
+					<td> 
+						<select id="cbx_unidad_de_medida" onchange="calcularDomo();">
+							<option value="centimetros"> centimetros </option>
+							<option value="metros" selected> metros </option>
+							<option value="pulgadas"> pulgadas </option>
+						</select>
+					</td>
+					<td> <button type="button" onclick="calcularDomo();"> Calcular </button> </td>
+				</tr>
+				<tr>
+					<td> Redondear resultados: </td>
+					<td>  
+						<select id="cbx_redondear_resultados" onchange="calcularDomo();">
+							<option value="si"> si </option>
+							<option value="no" selected> no </option>
+						</select>
+					</td>
+					<td> </td>
+					<td> </td>
+				</tr>
+			</table>			
 		</td>
-		<td> </td>
+		<td></td>
 	</tr>
 	<tr>
 		<td>
@@ -45,12 +61,22 @@
 		</td>
 		<td>
 			<h4 id="descripcion_domo"></h4>
-			<label>Altura del domo: </label>
-			<input type="text" id="alturaDomo" disabled>
-			<img id="diagrama_construccion" style="width: 80%;" />
+
+			<table>
+				<tr>
+					<td> Altura del domo: </td>
+					<td> <input type="text" id="alturaDomo" disabled> </td>
+				</tr>
+				<tr>
+					<td> Cantidad de triángulos: </td>
+					<td> <input type="text" id="cantidadTriangulos" disabled> </td>
+				</tr>
+			</table>
+
+			<img id="diagrama_construccion" onclick="abrirImagen(event)" style="width: 80%;" />
 		</td>
 		<td>
-			<img id="imagen_resultado" />
+			<img id="imagen_resultado" onclick="abrirImagen(event)" />
 		</td>
 	</tr>
 </table>
@@ -60,7 +86,13 @@
 
 <script>
 
-const calcularDomoV8 = () => 
+const abrirImagen = (evento) =>
+{
+	let medidasImagen = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
+	window.open(evento.target.src, "_blank", medidasImagen);
+}
+
+const calcularDomo = () => 
 {
 	let dh = 0;
 	//let diametro = formulario_v8.dx.value;    // formulario_v8.dx.value   es el diametro. Ej   13.00
@@ -71,6 +103,7 @@ const calcularDomoV8 = () =>
 		{
 			nombre: "V4", 
 			descripcion: "Domo Geodésico Frecuencia V4 basado en el icosaedro",
+			cantidadTriangulos: 160,
 			imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV4/domoV4_diagrama_construccion.png",
 			imagenResultado: "imagenes/domo_icosaedro/domoV4/domoV4.png",
 			medidas: [
@@ -85,6 +118,7 @@ const calcularDomoV8 = () =>
 		{
 			nombre: "V6", 
 			descripcion: "Domo Geodésico Frecuencia V6 basado en el icosaedro",
+			cantidadTriangulos: 360,
 			imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV6/domoV6_diagrama_construccion.png",
 			imagenResultado: "imagenes/domo_icosaedro/domoV6/domoV6.png",
 			medidas: [
@@ -102,6 +136,7 @@ const calcularDomoV8 = () =>
 		{
 			nombre: "V8", 
 			descripcion: "Domo Geodésico Frecuencia V8 basado en el icosaedro",
+			cantidadTriangulos: 640,
 			imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV8/domoV8_diagrama_construccion.png",
 			imagenResultado: "imagenes/domo_icosaedro/domoV8/domoV8.png",
 			medidas: [
@@ -172,7 +207,11 @@ const calcularDomoV8 = () =>
 		}
 	});
 
-	document.querySelector("#alturaDomo").value = Math.round((diametro * 0.5) * 10000) / 10000;   // Esta es la altura del domo
+	var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
+
+	document.querySelector("#alturaDomo").value = (Math.round((diametro * 0.5) * 10000) / 10000) + " " + unidadDeMedida;   // Esta es la altura del domo
+
+	document.querySelector("#cantidadTriangulos").value = domoSeleccionado.cantidadTriangulos;    // Cantidad de triangulos
 
 	//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';
 
@@ -181,7 +220,7 @@ const calcularDomoV8 = () =>
 	document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
 }
 
-calcularDomoV8();
+calcularDomo();
 
 </script>
 
