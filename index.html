@@ -18,7 +18,7 @@
 	<tr style="background-color: #a89292; ">
 		<td>  
 			Frecuencia:
-			<select id="cbx_frecuencia_domo" onchange="calcularDomo();">
+			<select id="cbx_frecuencia_domo" onchange="seleccionarDomo();">
 				<option value="V4"> V4 </option>
 				<option value="V6"> V6 </option>
 				<option value="V8" selected> V8 </option>
@@ -32,18 +32,18 @@
 						<input id="txt_diametro" value="13.00"> 
 					</td>
 					<td> 
-						<select id="cbx_unidad_de_medida" onchange="calcularDomo();">
+						<select id="cbx_unidad_de_medida" onchange="seleccionarDomo();">
 							<option value="centimetros"> centimetros </option>
 							<option value="metros" selected> metros </option>
 							<option value="pulgadas"> pulgadas </option>
 						</select>
 					</td>
-					<td> <button type="button" onclick="calcularDomo();"> Calcular </button> </td>
+					<td> <button type="button" onclick="seleccionarDomo();"> Calcular </button> </td>
 				</tr>
 				<tr>
 					<td> Redondear resultados: </td>
 					<td>  
-						<select id="cbx_redondear_resultados" onchange="calcularDomo();">
+						<select id="cbx_redondear_resultados" onchange="seleccionarDomo();">
 							<option value="si"> si </option>
 							<option value="no" selected> no </option>
 						</select>
@@ -94,6 +94,8 @@
 
 <script>
 
+let domoSeleccionado = null;
+
 const abrirImagen = (evento) =>
 {
 	let medidasImagen = "location=yes,height=570,width=520,scrollbars=yes,status=yes";
@@ -107,25 +109,21 @@ const callbackCambioImagenDomo = () =>
 	imagen.onload = () => {
 		observarCambioTablaDomo.disconnect();
 		//imagen.addEventListener("click", () => {  alert("se ha hecho click en la imagen");  });
-		ocultarLoadingSpinner();		
+		
+		desplegarTablaCalculo(domoSeleccionado);	
+		ocultarLoadingSpinner();	
 	};
 };
 
 const observarCambioTablaDomo = new MutationObserver(callbackCambioImagenDomo);
 
-const calcularDomo = () => 
-{	
-	observarCambioTablaDomo.observe(document.body, { subtree: true, childList: true });
-
-	mostrarLoadingSpinner(); 
-
+const desplegarTablaCalculo = (domoSeleccionado) =>
+{
 	let diametro = document.querySelector("#txt_diametro").value;
 	let radio = diametro / 2;
 
 	var tablaDomo = document.querySelector("#tablaDomo tbody"); 
 	tablaDomo.innerHTML = "";   // Limpia la tabla 
-
-	var domoSeleccionado = medidasDomoIcosaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
 
 	let redondearResultados = (document.querySelector("#cbx_redondear_resultados").value == "si") ? true : false;
 
@@ -144,18 +142,29 @@ const calcularDomo = () =>
 
 	var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
 
+	document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
 	document.querySelector("#alturaDomo").value = (Math.round((diametro * 0.5) * 10000) / 10000) + " " + unidadDeMedida;   // Esta es la altura del domo
-
 	document.querySelector("#cantidadTriangulos").value = domoSeleccionado.cantidadTriangulos;    // Cantidad de triangulos
 
 	//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';
-
-	document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
-	document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
-	document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
 }
 
-calcularDomo();
+const seleccionarDomo = (() => 
+{	
+	domoSeleccionado = medidasDomoIcosaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
+	
+	document.querySelector("#descripcion_domo").innerHTML = "";
+	document.querySelector("#alturaDomo").value = "";
+	document.querySelector("#cantidadTriangulos").value = "";
+
+	mostrarLoadingSpinner(); 
+	observarCambioTablaDomo.observe(document.body, { subtree: true, childList: true });
+
+	document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
+	document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
+})
+
+seleccionarDomo();
 
 //=============================================================>>>>>
 /*
