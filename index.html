@@ -100,9 +100,9 @@ const abrirImagen = (evento) =>
 	window.open(evento.target.src, "_blank", medidasImagen);
 }
 
-const calcularDomo = () => 
+const calcularDomo = async () => 
 {
-	new Promise((resolver, rechazar) => 
+	await new Promise((resolver, rechazar) => 
 	{
 		mostrarLoadingSpinner(); 
 
@@ -141,13 +141,13 @@ const calcularDomo = () =>
 		document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
 		document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
 
-		resolver();  // Esto forma parte del promise
+		/*
+		setTimeout(function(){
+			resolver(); // Todo salió bien. Esto forma parte del promise
+		}, 700);
+		*/
+		resolver(); // Esto forma parte del promise
 	})
-	//.then(() => 
-	//{
-		//throw new Error("Algo falló");
-		//console.log("Haz esto");
-	//})
 	.catch(() => {
 		alert("Se encontró un error");
 	})
@@ -157,6 +157,18 @@ const calcularDomo = () =>
 }
 
 calcularDomo();
+
+//=============================================================>>>>>
+/*
+(async () => {
+	await (() => {
+		console.log("has algo")
+	})()
+})()
+.then(() => {
+  console.log("terminó");
+});
+*/
 
 </script>
 
