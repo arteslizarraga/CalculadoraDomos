@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<html>
+	<head> <meta charset="UTF-8"> </head>
+<body>
+
+<!--
+<img name="img_dome_22_8v_0_5" src="Data/Geodesic_Dome/draw.cgi?n=22&amp;f=8v&amp;nox=1_2&amp;d=6.00&amp;hr=0.5" class="foto"><br><div class="desc">Geodesic 8V Icosahedron Dome (Human is 170cm/5'7")</div>
+-->
+<table border="1" width="100%">
+	<tr style="background-color: #a89292; ">
+		<td>  
+			Frecuencia:
+			<select id="cbx_frecuencia_domo" onchange="calcularDomoV8();">
+				<option value="V8" selected> V8 </option>
+			</select>
+		</td>
+		<td> 
+			Diámetro del domo
+			<input id="txt_diametro" value="6.00" onchange="calcularDomoV8();"> 
+		</td>
+		<td> </td>
+	</tr>
+	<tr>
+		<td>
+			<table id="tablaDomo" border="1"> 
+				<thead> 
+					<tr> 
+						<th> Letra </th> 
+						<th> Medidas </th> 
+					</tr> 
+				</thead> 
+				<tbody></tbody> 
+			</table> 
+		</td>
+		<td>
+			<h4 id="descripcion_domo"></h4>
+			<label>Altura del domo: </label>
+			<input type="text" id="alturaDomo" disabled>
+			<img id="diagrama_construccion" style="width: 80%;" />
+		</td>
+		<td>
+			<img id="imagen_resultado" />
+		</td>
+	</tr>
+</table>
+
+<script>
+
+const calcularDomoV8 = () => 
+{
+	let dh = 0;
+	//let diametro = formulario_v8.dx.value;    // formulario_v8.dx.value   es el diametro. Ej   13.00
+	let diametro = document.querySelector("#txt_diametro").value;
+	let radio = diametro / 2;
+	
+	var arregloDomos = [  // 8V Octahedron Dome
+		{
+			nombre: "V8", 
+			descripcion: "Domo Geodésico Frecuencia V8 basado en el octaedro",
+			imagenDiagramaConstruccion: "imagenes/domo_octaedro/domoV8/domoV8_diagrama_construccion.png",
+			imagenResultado: "imagenes/domo_octaedro/domoV8/domoV8.png",
+			medidas: [
+				{letra: "A", medida: Math.round((radio * 0.14178 - dh * 2) * 10000) / 10000},
+				{letra: "B", medida: Math.round((radio * 0.16439 - dh * 2) * 10000) / 10000},
+				{letra: "C", medida: Math.round((radio * 0.17961 - dh * 2) * 10000) / 10000},
+				{letra: "D", medida: Math.round((radio * 0.19238 - dh * 2) * 10000) / 10000},
+				{letra: "E", medida: Math.round((radio * 0.20000 - dh * 2) * 10000) / 10000},
+				{letra: "F", medida: Math.round((radio * 0.21272 - dh * 2) * 10000) / 10000},
+				{letra: "G", medida: Math.round((radio * 0.21823 - dh * 2) * 10000) / 10000},
+				{letra: "H", medida: Math.round((radio * 0.22192 - dh * 2) * 10000) / 10000},
+				{letra: "I", medida: Math.round((radio * 0.22504 - dh * 2) * 10000) / 10000},
+				{letra: "J", medida: Math.round((radio * 0.24197 - dh * 2) * 10000) / 10000},
+				{letra: "K", medida: Math.round((radio * 0.24229 - dh * 2) * 10000) / 10000},
+				{letra: "L", medida: Math.round((radio * 0.24437 - dh * 2) * 10000) / 10000},
+				{letra: "M", medida: Math.round((radio * 0.24915 - dh * 2) * 10000) / 10000},
+				{letra: "N", medida: Math.round((radio * 0.25786 - dh * 2) * 10000) / 10000},
+				{letra: "O", medida: Math.round((radio * 0.25820 - dh * 2) * 10000) / 10000},
+				{letra: "P", medida: Math.round((radio * 0.27685 - dh * 2) * 10000) / 10000},
+				{letra: "Q", medida: Math.round((radio * 0.27735 - dh * 2) * 10000) / 10000},
+				{letra: "R", medida: Math.round((radio * 0.28011 - dh * 2) * 10000) / 10000},
+				{letra: "S", medida: Math.round((radio * 0.29180 - dh * 2) * 10000) / 10000},
+				{letra: "T", medida: Math.round((radio * 0.30151 - dh * 2) * 10000) / 10000}
+			]
+		}	
+	];
+
+	var tablaDomo = document.getElementById("tablaDomo").getElementsByTagName("tbody")[0]; 
+	tablaDomo.innerHTML = "";   // Limpia la tabla 
+
+	var domoSeleccionado = arregloDomos.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
+
+	domoSeleccionado.medidas.sort((a, b) => b.letra.localeCompare(a.letra)).forEach(c=> 
+	{
+		var fila = tablaDomo.insertRow(0);
+		fila.insertCell(0).innerHTML = c.letra; 
+		fila.insertCell(1).innerHTML = c.medida; 
+	});
+
+	document.querySelector("#alturaDomo").value = Math.round((diametro * 0.5) * 10000) / 10000;   // Esta es la altura del domo
+
+	//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';
+
+	document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
+	document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
+	document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
+}
+
+calcularDomoV8();
+
+</script>
+
+</body>
+</html>
+

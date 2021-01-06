@@ -1,11 +1,19 @@
 <!DOCTYPE HTML>
 <html>
-	<head> <meta charset="UTF-8"> </head>
+	<head> 
+		<meta charset="UTF-8"> 
+		<link rel="stylesheet" href="css/estilos.css">
+		<script src="js/funcionesGenericas.js"></script>
+		<script src="js/medidasDomoIcosaedro.js"></script>
+	</head>
 <body>
+
+<div style="display: none" id="loading-spinner"></div> <!-- Imagen de carga de datos -->
 
 <!--
 <img name="img_dome_22_8v_0_5" src="Data/Geodesic_Dome/draw.cgi?n=22&amp;f=8v&amp;nox=1_2&amp;d=6.00&amp;hr=0.5" class="foto"><br><div class="desc">Geodesic 8V Icosahedron Dome (Human is 170cm/5'7")</div>
 -->
+
 <table border="1" width="100%">
 	<tr style="background-color: #a89292; ">
 		<td>  
@@ -94,130 +102,58 @@ const abrirImagen = (evento) =>
 
 const calcularDomo = () => 
 {
-	let dh = 0;
-	//let diametro = formulario_v8.dx.value;    // formulario_v8.dx.value   es el diametro. Ej   13.00
-	let diametro = document.querySelector("#txt_diametro").value;
-	let radio = diametro / 2;
-	
-	var arregloDomos = [
-		{
-			nombre: "V4", 
-			descripcion: "Domo Geodésico Frecuencia V4 basado en el icosaedro",
-			cantidadTriangulos: 160,
-			imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV4/domoV4_diagrama_construccion.png",
-			imagenResultado: "imagenes/domo_icosaedro/domoV4/domoV4.png",
-			medidas: [
-				{ letra: "A", factorCoordenada: 0.25318 }, // a
-				{ letra: "B", factorCoordenada: 0.29453 }, // c
-				{ letra: "C", factorCoordenada: 0.29524 }, // b
-				{ letra: "D", factorCoordenada: 0.29859 }, // f
-				{ letra: "E", factorCoordenada: 0.31287 }, // d
-				{ letra: "F", factorCoordenada: 0.32492 }  // e
-			]
-		},	
-		{
-			nombre: "V6", 
-			descripcion: "Domo Geodésico Frecuencia V6 basado en el icosaedro",
-			cantidadTriangulos: 360,
-			imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV6/domoV6_diagrama_construccion.png",
-			imagenResultado: "imagenes/domo_icosaedro/domoV6/domoV6.png",
-			medidas: [
-				{letra: "A", factorCoordenada: 0.16257 },  // a = radio * 0.16256722 
-				{letra: "B", factorCoordenada: 0.18191 },  // c = radio * 0.18190825
-				{letra: "C", factorCoordenada: 0.18738 },  // e = radio * 0.1873834
-				{letra: "D", factorCoordenada: 0.19048 },  // b = radio * 0.19047686
-				{letra: "E", factorCoordenada: 0.19801 },  // f = radio * 0.19801258
-				{letra: "F", factorCoordenada: 0.20282 },  // d = radio * 0.20281969
-				{letra: "G", factorCoordenada: 0.20591 },  // g = radio * 0.20590774
-				{letra: "H", factorCoordenada: 0.21535 },  // h = radio * 0.21535373
-				{letra: "I", factorCoordenada: 0.21663 }   // i = radio * 0.21662821
-			]
-		},	
-		{
-			nombre: "V8", 
-			descripcion: "Domo Geodésico Frecuencia V8 basado en el icosaedro",
-			cantidadTriangulos: 640,
-			imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV8/domoV8_diagrama_construccion.png",
-			imagenResultado: "imagenes/domo_icosaedro/domoV8/domoV8.png",
-			medidas: [
-				/*
-				// Ejemplo v8 propio ANTIGUO
-				{ letra: "A", factorCoordenada: 0.11946 },   
-				{ letra: "L", factorCoordenada: 0.13033 },   
-				{ letra: "K", factorCoordenada: 0.13424 }, // Da una pequeña diferencia 
-				{ letra: "P", factorCoordenada: 0.14018 },   
-				{ letra: "G", factorCoordenada: 0.14056 }, // Da una pequeña diferencia 
-				{ letra: "I", factorCoordenada: 0.14548 }, // Da una pequeña diferencia
-				{ letra: "Q", factorCoordenada: 0.14628 }, // Da una pequeña diferencia 
-				{ letra: "J", factorCoordenada: 0.14803 },   
-				{ letra: "B", factorCoordenada: 0.14862 },   
-				{ letra: "D", factorCoordenada: 0.15267 },   
-				{ letra: "O", factorCoordenada: 0.15296 },   
-				{ letra: "C", factorCoordenada: 0.15315 },   
-				{ letra: "E", factorCoordenada: 0.15477 },   
-				{ letra: "M", factorCoordenada: 0.15636 },   
-				{ letra: "R", factorCoordenada: 0.16033 },   
-				{ letra: "N", factorCoordenada: 0.16036 },   
-				{ letra: "F", factorCoordenada: 0.16088 }, // Da una pequeña diferencia
-				{ letra: "S", factorCoordenada: 0.16300 }, // Da una pequeña diferencia 
-				{ letra: "T", factorCoordenada: 0.16465 },   
-				{ letra: "H", factorCoordenada: 0.15636 }  // Agregado para rellenar el vacio. Da una pequeña diferencia
-				*/
-			
-				{ letra: "A", factorCoordenada: 0.11946, letraAntigua: "A" },  
-				{ letra: "B", factorCoordenada: 0.13033, letraAntigua: "L" },  
-				{ letra: "C", factorCoordenada: 0.13424, letraAntigua: "K" },  
-				{ letra: "D", factorCoordenada: 0.14018, letraAntigua: "P" },  
-				{ letra: "E", factorCoordenada: 0.14056, letraAntigua: "G" },  
-				{ letra: "F", factorCoordenada: 0.14548, letraAntigua: "I" },  
-				{ letra: "G", factorCoordenada: 0.14628, letraAntigua: "Q" },  
-				{ letra: "H", factorCoordenada: 0.14803, letraAntigua: "J" },  
-				{ letra: "I", factorCoordenada: 0.14862, letraAntigua: "B" },  
-				{ letra: "J", factorCoordenada: 0.15267, letraAntigua: "D" },  
-				{ letra: "K", factorCoordenada: 0.15296, letraAntigua: "O" },  
-				{ letra: "L", factorCoordenada: 0.15315, letraAntigua: "C" },  
-				{ letra: "M", factorCoordenada: 0.15477, letraAntigua: "E" },  
-				{ letra: "N", factorCoordenada: 0.15636, letraAntigua: "M" },  
-				{ letra: "O", factorCoordenada: 0.16033, letraAntigua: "R" },  
-				{ letra: "P", factorCoordenada: 0.16036, letraAntigua: "N" },  
-				{ letra: "Q", factorCoordenada: 0.16088, letraAntigua: "F" },  
-				{ letra: "R", factorCoordenada: 0.16300, letraAntigua: "S" },  
-				{ letra: "S", factorCoordenada: 0.16465, letraAntigua: "T" }   	
-			]
-		}		
-	];
-
-	var tablaDomo = document.getElementById("tablaDomo").getElementsByTagName("tbody")[0]; 
-	tablaDomo.innerHTML = "";   // Limpia la tabla 
-
-	var domoSeleccionado = arregloDomos.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
-
-	let redondearResultados = (document.querySelector("#cbx_redondear_resultados").value == "si") ? true : false;
-
-	domoSeleccionado.medidas.sort((a, b) => b.letra.localeCompare(a.letra)).forEach(c=> 
+	new Promise((resolver, rechazar) => 
 	{
-		var fila = tablaDomo.insertRow(0);
-		fila.insertCell(0).innerHTML = c.letra; 
+		mostrarLoadingSpinner(); 
 
-		if (redondearResultados) {
-			fila.insertCell(1).innerHTML = (radio * c.factorCoordenada).toString().substring(0,5);
-		}
-		else {
-			fila.insertCell(1).innerHTML = Math.round((radio * c.factorCoordenada) * 10000) / 10000;
-		}
+		let diametro = document.querySelector("#txt_diametro").value;
+		let radio = diametro / 2;
+
+		var tablaDomo = document.getElementById("tablaDomo").getElementsByTagName("tbody")[0]; 
+		tablaDomo.innerHTML = "";   // Limpia la tabla 
+
+		var domoSeleccionado = medidasDomoIcosaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
+
+		let redondearResultados = (document.querySelector("#cbx_redondear_resultados").value == "si") ? true : false;
+
+		domoSeleccionado.medidas.sort((a, b) => b.letra.localeCompare(a.letra)).forEach(c=> 
+		{
+			var fila = tablaDomo.insertRow(0);
+			fila.insertCell(0).innerHTML = c.letra; 
+
+			if (redondearResultados) {
+				fila.insertCell(1).innerHTML = (radio * c.factorCoordenada).toString().substring(0,5);
+			}
+			else {
+				fila.insertCell(1).innerHTML = Math.round((radio * c.factorCoordenada) * 10000) / 10000;
+			}
+		});
+
+		var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
+
+		document.querySelector("#alturaDomo").value = (Math.round((diametro * 0.5) * 10000) / 10000) + " " + unidadDeMedida;   // Esta es la altura del domo
+
+		document.querySelector("#cantidadTriangulos").value = domoSeleccionado.cantidadTriangulos;    // Cantidad de triangulos
+
+		//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';
+
+		document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
+		document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
+		document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
+
+		resolver();  // Esto forma parte del promise
+	})
+	//.then(() => 
+	//{
+		//throw new Error("Algo falló");
+		//console.log("Haz esto");
+	//})
+	.catch(() => {
+		alert("Se encontró un error");
+	})
+	.then(() => {
+		ocultarLoadingSpinner();
 	});
-
-	var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
-
-	document.querySelector("#alturaDomo").value = (Math.round((diametro * 0.5) * 10000) / 10000) + " " + unidadDeMedida;   // Esta es la altura del domo
-
-	document.querySelector("#cantidadTriangulos").value = domoSeleccionado.cantidadTriangulos;    // Cantidad de triangulos
-
-	//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';
-
-	document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
-	document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
-	document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
 }
 
 calcularDomo();
