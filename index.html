@@ -100,8 +100,23 @@ const abrirImagen = (evento) =>
 	window.open(evento.target.src, "_blank", medidasImagen);
 }
 
-const calcularDomo = async () => 
+const callbackCambioTablaDomo = () => 
 {
+  const tabla = document.querySelector("#tablaDomo tbody");
+
+  if (tabla) {
+    observarCambioTablaDomo.disconnect();
+	//tabla.addEventListener("click", () => {  alert("se ha hecho click en la tabla");  });
+	ocultarLoadingSpinner();
+  }
+};
+
+const observarCambioTablaDomo = new MutationObserver(callbackCambioTablaDomo);
+
+const calcularDomo = async () => 
+{	
+	await observarCambioTablaDomo.observe(document.body, { subtree: true, childList: true });
+
 	await new Promise((resolver, rechazar) => 
 	{
 		mostrarLoadingSpinner(); 
@@ -109,7 +124,7 @@ const calcularDomo = async () =>
 		let diametro = document.querySelector("#txt_diametro").value;
 		let radio = diametro / 2;
 
-		var tablaDomo = document.getElementById("tablaDomo").getElementsByTagName("tbody")[0]; 
+		var tablaDomo = document.querySelector("#tablaDomo tbody"); 
 		tablaDomo.innerHTML = "";   // Limpia la tabla 
 
 		var domoSeleccionado = medidasDomoIcosaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
@@ -152,7 +167,7 @@ const calcularDomo = async () =>
 		alert("Se encontró un error");
 	})
 	.then(() => {
-		ocultarLoadingSpinner();
+		//ocultarLoadingSpinner();
 	});
 }
 
@@ -169,6 +184,26 @@ calcularDomo();
   console.log("terminó");
 });
 */
+
+//=============================================================>>>>>
+/*
+const probando = async () => 
+{
+	await new Promise((resolver, rechazar) => 
+	{
+		mostrarLoadingSpinner(); 	
+		setTimeout(function() { resolver(); }, 700);
+		//resolver(); // Esto forma parte del promise
+	})
+	.catch(() => {
+		alert("Se encontró un error");
+	})
+	.then(() => {
+		ocultarLoadingSpinner();
+	});
+}
+*/
+//=============================================================>>>>>
 
 </script>
 
