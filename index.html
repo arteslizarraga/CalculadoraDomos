@@ -100,75 +100,59 @@ const abrirImagen = (evento) =>
 	window.open(evento.target.src, "_blank", medidasImagen);
 }
 
-const callbackCambioTablaDomo = () => 
+const callbackCambioImagenDomo = () => 
 {
-  const tabla = document.querySelector("#tablaDomo tbody");
+	var imagen = document.querySelector("#diagrama_construccion");
 
-  if (tabla) {
-    observarCambioTablaDomo.disconnect();
-	//tabla.addEventListener("click", () => {  alert("se ha hecho click en la tabla");  });
-	ocultarLoadingSpinner();
-  }
+	imagen.onload = () => {
+		observarCambioTablaDomo.disconnect();
+		//imagen.addEventListener("click", () => {  alert("se ha hecho click en la imagen");  });
+		ocultarLoadingSpinner();		
+	};
 };
 
-const observarCambioTablaDomo = new MutationObserver(callbackCambioTablaDomo);
+const observarCambioTablaDomo = new MutationObserver(callbackCambioImagenDomo);
 
-const calcularDomo = async () => 
+const calcularDomo = () => 
 {	
-	await observarCambioTablaDomo.observe(document.body, { subtree: true, childList: true });
+	observarCambioTablaDomo.observe(document.body, { subtree: true, childList: true });
 
-	await new Promise((resolver, rechazar) => 
+	mostrarLoadingSpinner(); 
+
+	let diametro = document.querySelector("#txt_diametro").value;
+	let radio = diametro / 2;
+
+	var tablaDomo = document.querySelector("#tablaDomo tbody"); 
+	tablaDomo.innerHTML = "";   // Limpia la tabla 
+
+	var domoSeleccionado = medidasDomoIcosaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
+
+	let redondearResultados = (document.querySelector("#cbx_redondear_resultados").value == "si") ? true : false;
+
+	domoSeleccionado.medidas.sort((a, b) => b.letra.localeCompare(a.letra)).forEach(c=> 
 	{
-		mostrarLoadingSpinner(); 
+		var fila = tablaDomo.insertRow(0);
+		fila.insertCell(0).innerHTML = c.letra; 
 
-		let diametro = document.querySelector("#txt_diametro").value;
-		let radio = diametro / 2;
-
-		var tablaDomo = document.querySelector("#tablaDomo tbody"); 
-		tablaDomo.innerHTML = "";   // Limpia la tabla 
-
-		var domoSeleccionado = medidasDomoIcosaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
-
-		let redondearResultados = (document.querySelector("#cbx_redondear_resultados").value == "si") ? true : false;
-
-		domoSeleccionado.medidas.sort((a, b) => b.letra.localeCompare(a.letra)).forEach(c=> 
-		{
-			var fila = tablaDomo.insertRow(0);
-			fila.insertCell(0).innerHTML = c.letra; 
-
-			if (redondearResultados) {
-				fila.insertCell(1).innerHTML = (radio * c.factorCoordenada).toString().substring(0,5);
-			}
-			else {
-				fila.insertCell(1).innerHTML = Math.round((radio * c.factorCoordenada) * 10000) / 10000;
-			}
-		});
-
-		var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
-
-		document.querySelector("#alturaDomo").value = (Math.round((diametro * 0.5) * 10000) / 10000) + " " + unidadDeMedida;   // Esta es la altura del domo
-
-		document.querySelector("#cantidadTriangulos").value = domoSeleccionado.cantidadTriangulos;    // Cantidad de triangulos
-
-		//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';
-
-		document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
-		document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
-		document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
-
-		/*
-		setTimeout(function(){
-			resolver(); // Todo salió bien. Esto forma parte del promise
-		}, 700);
-		*/
-		resolver(); // Esto forma parte del promise
-	})
-	.catch(() => {
-		alert("Se encontró un error");
-	})
-	.then(() => {
-		//ocultarLoadingSpinner();
+		if (redondearResultados) {
+			fila.insertCell(1).innerHTML = (radio * c.factorCoordenada).toString().substring(0,5);
+		}
+		else {
+			fila.insertCell(1).innerHTML = Math.round((radio * c.factorCoordenada) * 10000) / 10000;
+		}
 	});
+
+	var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
+
+	document.querySelector("#alturaDomo").value = (Math.round((diametro * 0.5) * 10000) / 10000) + " " + unidadDeMedida;   // Esta es la altura del domo
+
+	document.querySelector("#cantidadTriangulos").value = domoSeleccionado.cantidadTriangulos;    // Cantidad de triangulos
+
+	//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';
+
+	document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
+	document.querySelector("#diagrama_construccion").src = domoSeleccionado.imagenDiagramaConstruccion;
+	document.querySelector("#imagen_resultado").src = domoSeleccionado.imagenResultado;
 }
 
 calcularDomo();
