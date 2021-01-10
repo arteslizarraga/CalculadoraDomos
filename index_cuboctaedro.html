@@ -4,19 +4,9 @@
 		<meta charset="UTF-8"> 
 		<link rel="stylesheet" href="css/estilos.css">
 		<script src="js/funcionesGenericas.js"></script>
-		<script src="js/medidasDomoIcosaedro.js"></script>
-		
+		<script src="js/medidasDomoCuboctaedro.js"></script>
 	</head>
 <body>
-
-<!--
-<table style="background-color: #716464;" width="100%">
-	<tr>
-		<td> <a href="index.html" style="color: #e1d5d5;"> Icosaedro </a> </td>
-		<td> <a href="index_cuboctaedro.html" style="color: #e1d5d5;"> Cuboctaedro </a> </td>
-	</tr>
-</table>
- -->
 
 <div style="display: none" id="loading-spinner"></div> <!-- Imagen de carga de datos -->
 
@@ -29,11 +19,7 @@
 		<td>  
 			Frecuencia:
 			<select id="cbx_frecuencia_domo" onchange="seleccionarDomo();">
-				<option value="V4"> V4 </option>
-				<option value="V6"> V6 </option>
-				<option value="V7 10/21"> V7 10/21 </option>
-				<option value="V7 11/21"> V7 11/21 </option>
-				<option value="V8" selected> V8 </option>
+				<option value="V6" selected> V6 </option>
 			</select>
 		</td>
 		<td> 
@@ -121,8 +107,8 @@
 			</table> 
 		</td>
 		<td>
-			<h4> Icosaedro (figura de base) </h4>
-			<img src="imagenes/domo_icosaedro/icosaedro.png" style="width: 20%;" />
+			<h4> Cuboctaedro (figura de base) </h4>
+			<img src="imagenes/domo_cuboctaedro/cuboctaedro.png" style="width: 20%;" />
 		</td>
 	</tr>
 </table>
@@ -174,8 +160,8 @@ const desplegarTablaCalculo = (domoSeleccionado) =>
 	let redondearResultados = (document.querySelector("#cbx_redondear_resultados").value == "si") ? true : false;
 
 	domoSeleccionado.medidas
-	.sort((a, b) => b.letra.localeCompare(a.letra))
-	//.reverse()
+	//.sort((a, b) => b.letra.localeCompare(a.letra))
+	.slice().reverse()
 	.forEach(c=> 
 	{
 		var fila = tablaDomo.insertRow(0);
@@ -196,7 +182,7 @@ const desplegarTablaCalculo = (domoSeleccionado) =>
 	var tablaTiposTriangulosDomo = document.querySelector("#tablaTiposTriangulosDomo tbody"); 
 	tablaTiposTriangulosDomo.innerHTML = "";   // Limpia la tabla 
 
-	domoSeleccionado.tiposTriangulos.reverse().forEach(c=> 
+	domoSeleccionado.tiposTriangulos.slice().reverse().forEach(c=> 
 	{
 		var fila = tablaTiposTriangulosDomo.insertRow(0);
 	
@@ -223,7 +209,7 @@ const desplegarTablaCalculo = (domoSeleccionado) =>
 
 const seleccionarDomo = (() => 
 {	
-	domoSeleccionado = medidasDomoIcosaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
+	domoSeleccionado = medidasDomoCuboctaedro.find(c=> c.nombre == document.querySelector("#cbx_frecuencia_domo").value);
 	
 	document.querySelector("#descripcion_domo").innerHTML = "";
 	document.querySelector("#alturaDomo").value = "";
