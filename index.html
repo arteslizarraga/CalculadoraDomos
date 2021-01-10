@@ -66,6 +66,7 @@
 				</thead> 
 				<tbody></tbody> 
 			</table> 
+
 		</td>
 		<td>
 			<h4 id="descripcion_domo"></h4>
@@ -87,7 +88,28 @@
 			<img id="imagen_resultado" onclick="abrirImagen(event)" />
 		</td>
 	</tr>
+	<tr>
+		<td></td>
+		<td>
+			<!-- <br/> <b> Total de tipos de triángulos: 0 </b> <br/><br/> -->
+			<br/> <div id="totalTiposTriangulosDomo"></div> <br/><br/>
+
+			<table id="tablaTiposTriangulosDomo" border="1" width="100%"> 
+				<thead> 
+					<tr> 
+						<th> Identificador triángulo </th> 
+						<th> Cantidad </th> 
+						<th> Ángulos </th>
+					</tr> 
+				</thead> 
+				<tbody></tbody> 
+			</table> 
+		</td>
+		<td></td>
+	</tr>
 </table>
+
+<br/><br/><br/>
 
 </script>
 
@@ -122,6 +144,8 @@ const desplegarTablaCalculo = (domoSeleccionado) =>
 	let diametro = document.querySelector("#txt_diametro").value;
 	let radio = diametro / 2;
 
+	//===================================================>>>>>
+
 	var tablaDomo = document.querySelector("#tablaDomo tbody"); 
 	tablaDomo.innerHTML = "";   // Limpia la tabla 
 
@@ -139,6 +163,24 @@ const desplegarTablaCalculo = (domoSeleccionado) =>
 			fila.insertCell(1).innerHTML = Math.round((radio * c.factorCoordenada) * 10000) / 10000;
 		}
 	});
+
+	//===================================================>>>>>
+
+	document.querySelector("#totalTiposTriangulosDomo").innerHTML = `<b> Total de tipos de triángulos: ${domoSeleccionado.tiposTriangulos.length} </b>`;
+
+	var tablaTiposTriangulosDomo = document.querySelector("#tablaTiposTriangulosDomo tbody"); 
+	tablaTiposTriangulosDomo.innerHTML = "";   // Limpia la tabla 
+
+	domoSeleccionado.tiposTriangulos.reverse().forEach(c=> 
+	{
+		var fila = tablaTiposTriangulosDomo.insertRow(0);
+	
+		fila.insertCell(0).innerHTML = c.identificador;
+		fila.insertCell(1).innerHTML = c.cantidad;
+		fila.insertCell(2).innerHTML = c.datosAngulos; 
+	});
+
+	//===================================================>>>>>
 
 	var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
 
