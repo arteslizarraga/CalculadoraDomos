@@ -21,6 +21,8 @@
 			<select id="cbx_frecuencia_domo" onchange="seleccionarDomo();">
 				<option value="V4"> V4 </option>
 				<option value="V6"> V6 </option>
+				<option value="V7 10/21"> V7 10/21 </option>
+				<option value="V7 11/21"> V7 11/21 </option>
 				<option value="V8" selected> V8 </option>
 			</select>
 		</td>
@@ -74,7 +76,10 @@
 			<table>
 				<tr>
 					<td> Altura del domo: </td>
-					<td> <input type="text" id="alturaDomo" disabled> </td>
+					<td> 
+						<input type="text" id="alturaDomo" disabled> 
+						<input type="text" id="porcentajeAlturaDiametro" disabled>
+					</td>
 				</tr>
 				<tr>
 					<td> Cantidad de triángulos: </td>
@@ -117,6 +122,10 @@
 <script>
 
 let domoSeleccionado = null;
+
+const calcularPorcentajeNumero = (numero, porcentaje) => {
+	return (parseFloat(numero) * parseFloat(porcentaje)) / 100;
+}
 
 const abrirImagen = (evento) =>
 {
@@ -183,9 +192,14 @@ const desplegarTablaCalculo = (domoSeleccionado) =>
 	//===================================================>>>>>
 
 	var unidadDeMedida = document.querySelector("#cbx_unidad_de_medida").value;
+	let alturaDomo = calcularPorcentajeNumero(diametro, domoSeleccionado.porcentajeAlturaDiametro); 
 
 	document.querySelector("#descripcion_domo").innerHTML = domoSeleccionado.descripcion;
-	document.querySelector("#alturaDomo").value = (Math.round((diametro * 0.5) * 10000) / 10000) + " " + unidadDeMedida;   // Esta es la altura del domo
+	document.querySelector("#alturaDomo").value = alturaDomo + " " + unidadDeMedida;   // Esta es la altura del domo
+	
+	document.querySelector("#porcentajeAlturaDiametro").value = `${domoSeleccionado.porcentajeAlturaDiametro}% del diámetro`;
+	
+	
 	document.querySelector("#cantidadTriangulos").value = domoSeleccionado.cantidadTriangulos;    // Cantidad de triangulos
 
 	//document.img_dome_22_8v_0_5.src = 'Data/Geodesic_Dome/draw.cgi?n=22&f=8v&nox=1_2&d='+diametro+'&hr=0.5';

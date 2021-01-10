@@ -21,7 +21,8 @@ var medidasDomoIcosaedro = [
 			{identificador: "B-D-E", cantidad: 60, datosAngulos: "57.52°, 58.80°, 63.68°"},
 			{identificador: "E-E-F", cantidad: 30, datosAngulos: "58.72°, 58.72°, 62.55°"},
 			{identificador: "F-F-F", cantidad: 10, datosAngulos: "60.00°, 60.00°, 60.00°"}
-		]
+		],
+		porcentajeAlturaDiametro: 50.00
 	},	
 	{
 		nombre: "V6", 
@@ -47,7 +48,87 @@ var medidasDomoIcosaedro = [
 			{identificador: "E-F-G", cantidad: 120, datosAngulos: "57.95°, 60.24°, 61.81°"},
 			{identificador: "G-G-H", cantidad: 60, datosAngulos: "58.46°, 58.46°, 63.08°"},
 			{identificador: "H-I-I", cantidad: 60, datosAngulos: "59.63°, 60.18°, 60.18°"}
-		]
+		],
+		porcentajeAlturaDiametro: 50.00
+	},
+	{
+		nombre: "V7 10/21", 
+		descripcion: "Domo Geodésico Frecuencia 7V tipo 10/21 basado en el icosaedro",
+		cantidadTriangulos: 455,
+		imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV7_10-21/domoV7_10-21_diagrama_construccion.png",
+		imagenResultado: "imagenes/domo_icosaedro/domoV7_10-21/domoV7_10-21.png",
+		medidas: [
+			{letra: "A", factorCoordenada: 0.13774 },
+			{letra: "B", factorCoordenada: 0.15197 },
+			{letra: "C", factorCoordenada: 0.15664 },
+			{letra: "D", factorCoordenada: 0.16154 },
+			{letra: "E", factorCoordenada: 0.16480 },
+			{letra: "F", factorCoordenada: 0.17066 },
+			{letra: "G", factorCoordenada: 0.17098 },
+			{letra: "H", factorCoordenada: 0.17132 },
+			{letra: "I", factorCoordenada: 0.17353 },
+			{letra: "J", factorCoordenada: 0.17585 },
+			{letra: "K", factorCoordenada: 0.18155 },
+			{letra: "L", factorCoordenada: 0.18161 },
+			{letra: "M", factorCoordenada: 0.18237 },
+			{letra: "N", factorCoordenada: 0.18548 },
+			{letra: "O", factorCoordenada: 0.18791 }
+		],
+		tiposTriangulos: [
+			{identificador: "A-A-D", cantidad: 30, datosAngulos: "54.10°, 54.10°, 71.81°"},
+			{identificador: "B-B-D", cantidad: 30, datosAngulos: "57.91°, 57.91°, 64.18°"},
+			{identificador: "B-C-H", cantidad: 60, datosAngulos: "55.01°, 57.57°, 67.41°"},
+			{identificador: "E-F-J", cantidad: 60, datosAngulos: "56.76°, 60.03°, 63.21°"},
+			{identificador: "E-G-H", cantidad: 60, datosAngulos: "57.56°, 61.13°, 61.31°"},
+			{identificador: "G-G-L", cantidad: 30, datosAngulos: "57.93°, 57.93°, 64.15°"},
+			{identificador: "I-I-J", cantidad: 20, datosAngulos: "59.54°, 59.54°, 60.92°"},
+			{identificador: "I-J-M", cantidad: 50, datosAngulos: "57.89°, 59.18°, 62.93°"},
+			{identificador: "K-K-L", cantidad: 25, datosAngulos: "59.98°, 59.98°, 60.04°"},
+			{identificador: "K-M-N", cantidad: 50, datosAngulos: "59.11°, 59.59°, 61.29°"},
+			{identificador: "N-N-O", cantidad: 30, datosAngulos: "59.57°, 59.57°, 60.86°"},
+			{identificador: "O-O-O", cantidad: 10, datosAngulos: "60.00°, 60.00°, 60.00°"} 
+		],
+		porcentajeAlturaDiametro: 46.26
+	},	
+	{
+		nombre: "V7 11/21", 
+		descripcion: "Domo Geodésico Frecuencia 7V tipo 11/21 basado en el icosaedro",
+		cantidadTriangulos: 525,
+		imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV7_11-21/domoV7_11-21_diagrama_construccion.png",
+		imagenResultado: "imagenes/domo_icosaedro/domoV7_11-21/domoV7_11-21.png",
+		medidas: [
+			{letra: "A", factorCoordenada: 0.13774 },
+			{letra: "B", factorCoordenada: 0.15197 },
+			{letra: "C", factorCoordenada: 0.15664 },
+			{letra: "D", factorCoordenada: 0.16154 },
+			{letra: "E", factorCoordenada: 0.16480 },
+			{letra: "F", factorCoordenada: 0.17066 },
+			{letra: "G", factorCoordenada: 0.17098 },
+			{letra: "H", factorCoordenada: 0.17132 },
+			{letra: "I", factorCoordenada: 0.17353 },
+			{letra: "J", factorCoordenada: 0.17585 },
+			{letra: "K", factorCoordenada: 0.18155 },
+			{letra: "L", factorCoordenada: 0.18161 },
+			{letra: "M", factorCoordenada: 0.18237 },
+			{letra: "N", factorCoordenada: 0.18548 },
+			{letra: "O", factorCoordenada: 0.18791 }
+			
+		],
+		tiposTriangulos: [
+			{identificador: "A-A-D", cantidad: 30, datosAngulos: "54.10°, 54.10°, 71.81°"},
+			{identificador: "B-B-D", cantidad: 30, datosAngulos: "57.91°, 57.91°, 64.18°"},
+			{identificador: "B-C-H", cantidad: 60, datosAngulos: "55.01°, 57.57°, 67.41°"},
+			{identificador: "E-F-J", cantidad: 60, datosAngulos: "56.76°, 60.03°, 63.21°"},
+			{identificador: "E-G-H", cantidad: 60, datosAngulos: "57.56°, 61.13°, 61.31°"},
+			{identificador: "G-G-L", cantidad: 30, datosAngulos: "57.93°, 57.93°, 64.15°"},
+			{identificador: "I-I-J", cantidad: 40, datosAngulos: "59.54°, 59.54°, 60.92°"},
+			{identificador: "I-J-M", cantidad: 70, datosAngulos: "57.89°, 59.18°, 62.93°"},
+			{identificador: "K-K-L", cantidad: 35, datosAngulos: "59.98°, 59.98°, 60.04°"},
+			{identificador: "K-M-N", cantidad: 70, datosAngulos: "59.11°, 59.59°, 61.29°"},
+			{identificador: "N-N-O", cantidad: 30, datosAngulos: "59.57°, 59.57°, 60.86°"},
+			{identificador: "O-O-O", cantidad: 10, datosAngulos: "60.00°, 60.00°, 60.00°"}
+		],
+		porcentajeAlturaDiametro: 54.00  
 	},	
 	{
 		nombre: "V8", 
@@ -116,7 +197,8 @@ var medidasDomoIcosaedro = [
 			{identificador: "O-Q-R", cantidad: 60, datosAngulos: "59.32°, 59.69°, 60.99°"},
 			{identificador: "R-R-S", cantidad: 30, datosAngulos: "59.67°, 59.67°, 60.65°"},
 			{identificador: "S-S-S", cantidad: 10, datosAngulos: "60.00°, 60.00°, 60.00°"}
-		]
+		],
+		porcentajeAlturaDiametro: 50.00
 	}		
 ];
 
