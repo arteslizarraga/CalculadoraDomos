@@ -29,25 +29,50 @@ var medidasDomoIcosaedro = [
 		descripcion: "Domo Geodésico Frecuencia V6 basado en el icosaedro",
 		cantidadTriangulos: 360,
 		imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV6/domoV6_diagrama_construccion.png",
-		imagenResultado: "imagenes/domo_icosaedro/domoV6/domoV6.png",
+		//imagenResultado: "imagenes/domo_icosaedro/domoV6/domoV6_simplydifferently.png",
+		imagenResultado: "imagenes/domo_icosaedro/domoV6/domoV6_teselacion.png",
 		medidas: [
-			{letra: "A", factorCoordenada: 0.16257 },  // a = radio * 0.16256722 
-			{letra: "B", factorCoordenada: 0.18191 },  // c = radio * 0.18190825
-			{letra: "C", factorCoordenada: 0.18738 },  // e = radio * 0.1873834
-			{letra: "D", factorCoordenada: 0.19048 },  // b = radio * 0.19047686
-			{letra: "E", factorCoordenada: 0.19801 },  // f = radio * 0.19801258
-			{letra: "F", factorCoordenada: 0.20282 },  // d = radio * 0.20281969
-			{letra: "G", factorCoordenada: 0.20591 },  // g = radio * 0.20590774
-			{letra: "H", factorCoordenada: 0.21535 },  // h = radio * 0.21535373
-			{letra: "I", factorCoordenada: 0.21663 }   // i = radio * 0.21662821
+			// Fuente:  https://www.ziptiedomes.com/geodesic-dome-calculators/5v-geodesic-dome-calculator.htm
+			{ color: "Red", letra: "A", factorCoordenada: 0.16256722 },           // Correcto
+			{ color: "Yellow", letra: "B", factorCoordenada: 0.19047686 },        // Lo cambie de         0.1904769  a   0.19047686
+			{ color: "Brown", letra: "C", factorCoordenada: 0.18190825 },         // Lo cambie de      0.1819083     a   0.18190825
+			{ color: "Green", letra: "D", factorCoordenada: 0.20281969 },         // Lo cambie de      0.2028197   a    0.20281969
+			{ color: "Orange", letra: "E", factorCoordenada: 0.1873834 },         // Correcto
+			{ color: "Black", letra: "F", factorCoordenada: 0.19801258 },         // Lo cambie de       0.1980126   a    0.19801258
+			{ color: "Gray", letra: "G", factorCoordenada: 0.20590774 },          // Correcto
+			{ color: "Purple", letra: "H", factorCoordenada: 0.21535373 },        // Correcto
+			{ color: "Blue", letra: "I", factorCoordenada: 0.21662821 },          // Correcto
+		
+			/*
+			// SimplyDifferently
+			{letra: "A", factorCoordenada: 0.16257 },  
+			{letra: "B", factorCoordenada: 0.18191 },  
+			{letra: "C", factorCoordenada: 0.18738 }, 
+			{letra: "D", factorCoordenada: 0.19048 },  
+			{letra: "E", factorCoordenada: 0.19801 },  
+			{letra: "F", factorCoordenada: 0.20282 },  
+			{letra: "G", factorCoordenada: 0.20591 },  
+			{letra: "H", factorCoordenada: 0.21535 },  
+			{letra: "I", factorCoordenada: 0.21663 }   
+			*/
 		],
 		tiposTriangulos: [
+			{identificador: "A-B-A", cantidad: 30, datosAngulos: ""},  	//   Isosceles Triangles
+			{identificador: "C-B-C", cantidad: 30, datosAngulos: ""},   //  Isosceles Triangles
+			{identificador: "C-D-E", cantidad: 60, datosAngulos: ""},   //   Scalene Triangles
+			{identificador: "D-F-G", cantidad: 120, datosAngulos: ""},  //   Scalene Triangles
+			{identificador: "G-H-G", cantidad: 60, datosAngulos: ""},   //   Isosceles Triangles
+			{identificador: "I-H-I", cantidad: 60, datosAngulos: ""},   //   Isosceles Triangles
+
+			/*
+			// SimplyDifferently
 			{identificador: "A-A-D", cantidad: 30, datosAngulos: "54.14°, 54.14°, 71.72°"},
 			{identificador: "B-B-D", cantidad: 30, datosAngulos: "58.42°, 58.42°, 63.15°"},
 			{identificador: "B-C-F", cantidad: 60, datosAngulos: "55.40°, 58.00°, 66.60°"},
 			{identificador: "E-F-G", cantidad: 120, datosAngulos: "57.95°, 60.24°, 61.81°"},
 			{identificador: "G-G-H", cantidad: 60, datosAngulos: "58.46°, 58.46°, 63.08°"},
 			{identificador: "H-I-I", cantidad: 60, datosAngulos: "59.63°, 60.18°, 60.18°"}
+			*/
 		],
 		porcentajeAlturaDiametro: 50.00
 	},
