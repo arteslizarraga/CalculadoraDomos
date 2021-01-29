@@ -160,7 +160,8 @@ var medidasDomoIcosaedro = [
 		descripcion: "Domo Geodésico Frecuencia V8 basado en el icosaedro",
 		cantidadTriangulos: 640,
 		imagenDiagramaConstruccion: "imagenes/domo_icosaedro/domoV8/domoV8_diagrama_construccion.png",
-		imagenResultado: "imagenes/domo_icosaedro/domoV8/domoV8.png",
+		//imagenResultado: "imagenes/domo_icosaedro/domoV8/domoV8.png",
+		imagenResultado: "imagenes/domo_icosaedro/domoV8/PanelesV8.png", 
 		medidas: [
 			/*
 			// Ejemplo v8 propio ANTIGUO
