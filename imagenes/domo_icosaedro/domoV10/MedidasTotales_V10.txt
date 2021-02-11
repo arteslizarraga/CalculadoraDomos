@@ -1,0 +1,22 @@
+
+Radio de la esfera:  7.5
+
+Altura desde la base, m                  7.50
+Radio de la base, m                      7.50
+Área de la base, m²                      176.25
+Área de la cubierta, m²                  352.34
+
+Tamaños (unidades)               
+    Caras                                34 (1000)
+    Aristas                              96 (3000)
+    Vértices                             18 (526)
+
+Travesaños 120x40mm              
+    Longitud total de los travesaños, m  2564.52
+    Volumen total de los travesaños, m³  11.87
+    Longitud del travesaño, mm           658-943
+    Ángulo entre caras, °                175.66-177.57
+
+Triángulos                       
+    Altura mín., mm                      573-857
+    Longitud máx. del lado, mm           831-989
