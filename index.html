@@ -125,6 +125,11 @@
 			<img src="imagenes/domo_icosaedro/icosaedro.gif" style="width: 20%;" />
 		</td>
 	</tr>
+	<tr>
+		<td colspan="3">
+			<div id="dibujar-triangulos"></div>
+		</td>
+	</tr>
 </table>
 
 <br/><br/><br/>
@@ -148,6 +153,7 @@ const abrirImagen = (evento) =>
 
 const callbackCambioImagenDomo = () => 
 {
+	//alert("callbackCambioImagenDomo");
 	var imagen = document.querySelector("#diagrama_construccion");
 
 	imagen.onload = () => {
@@ -155,6 +161,7 @@ const callbackCambioImagenDomo = () =>
 		//imagen.addEventListener("click", () => {  alert("se ha hecho click en la imagen");  });
 		
 		desplegarTablaCalculo(domoSeleccionado);	
+		dibujarTriangulos();
 		ocultarLoadingSpinner();	
 	};
 };
@@ -178,15 +185,20 @@ const desplegarTablaCalculo = (domoSeleccionado) =>
 	//.reverse()
 	.forEach(c=> 
 	{
+		let medidaCalculada = 0;
+
 		var fila = tablaDomo.insertRow(0);
 		fila.insertCell(0).innerHTML = c.letra; 
 
 		if (redondearResultados) {
-			fila.insertCell(1).innerHTML = (radio * c.factorCoordenada).toString().substring(0,5);
+			medidaCalculada = (radio * c.factorCoordenada).toString().substring(0,5);
 		}
 		else {
-			fila.insertCell(1).innerHTML = Math.round((radio * c.factorCoordenada) * 10000) / 10000;
+			medidaCalculada = Math.round((radio * c.factorCoordenada) * 10000) / 10000;
 		}
+
+		fila.insertCell(1).innerHTML = medidaCalculada;
+		c.medidaCalculada = medidaCalculada;  // 13-12-2025 => Esto se usará al dibujar los triángulos
 	});
 
 	//===================================================>>>>>
@@ -237,6 +249,104 @@ const seleccionarDomo = (() =>
 })
 
 seleccionarDomo();
+
+function dibujarTriangulos()
+{
+	var arregloDibujarTriangulos = [];
+	// var arregloDibujarTriangulos = [{"querySelector":"I-H-I","primeraCara":{"letra":"I","medida":1.4081},"segundaCara":{"letra":"H","medida":1.3998},"terceraCara":{"letra":"I","medida":1.4081}},{"querySelector":"G-H-G","primeraCara":{"letra":"G","medida":1.3384},"segundaCara":{"letra":"H","medida":1.3998},"terceraCara":{"letra":"G","medida":1.3384}},{"querySelector":"D-F-G","primeraCara":{"letra":"D","medida":1.3183},"segundaCara":{"letra":"F","medida":1.2871},"terceraCara":{"letra":"G","medida":1.3384}},{"querySelector":"C-D-E","primeraCara":{"letra":"C","medida":1.1824},"segundaCara":{"letra":"D","medida":1.3183},"terceraCara":{"letra":"E","medida":1.218}},{"querySelector":"C-B-C","primeraCara":{"letra":"C","medida":1.1824},"segundaCara":{"letra":"B","medida":1.2381},"terceraCara":{"letra":"C","medida":1.1824}},{"querySelector":"A-B-A","primeraCara":{"letra":"A","medida":1.0567},"segundaCara":{"letra":"B","medida":1.2381},"terceraCara":{"letra":"A","medida":1.0567}}];
+
+	domoSeleccionado.tiposTriangulos.forEach(tipo => 
+	{
+		var letras = tipo.identificador.split("-");
+		var caras = [];
+
+		letras.forEach(letra => 
+		{
+			var medida = domoSeleccionado.medidas.find(m => m.letra === letra).medidaCalculada;
+			caras.push({ letra: letra, medida: medida });
+		});
+
+		arregloDibujarTriangulos.push({ 
+			querySelector: tipo.identificador,
+			primeraCara: caras[0], 
+			segundaCara: caras[1], 
+			terceraCara: caras[2] 
+		});
+	});
+
+	//console.log(arregloDibujarTriangulos);
+
+	document.querySelector("#dibujar-triangulos").innerHTML = `
+	<div style="overflow-x:auto; width:100vw;">
+		<table>
+			<tr>
+				${arregloDibujarTriangulos.map(x =>
+					`<td>
+						<svg id="${x.querySelector}" width="400" height="400"></svg>
+					</td>`
+				).join("")}
+			</tr>
+		</table>
+	</div>`;
+
+
+	arregloDibujarTriangulos.forEach(x => dibujarTriangulo(x));
+}
+
+function dibujarTriangulo(objeto)
+{
+	console.log(objeto);
+
+	const primeraCara = objeto.primeraCara;
+	const segundaCara = objeto.segundaCara;
+	const terceraCara = objeto.terceraCara;
+
+	const escala = 150;
+
+	const A = primeraCara.medida * escala;
+	const B = segundaCara.medida * escala;
+	const C = terceraCara.medida * escala;
+
+	// Vértices
+	const x1 = 50, y1 = 250;
+	const x2 = x1 + C, y2 = y1;
+
+	const altura = Math.sqrt(A*A - (C/2)*(C/2));
+	const x3 = x1 + C / 2, y3 = y1 - altura;
+
+	// Centroide
+	const cx = (x1 + x2 + x3) / 3;
+	const cy = (y1 + y2 + y3) / 3;
+
+	// Función: punto medio empujado hacia el centro
+	function letraEnLado(xa, ya, xb, yb, texto) {
+		const mx = (xa + xb) / 2;
+		const my = (ya + yb) / 2;
+
+		const factor = 0.2; // qué tanto se mueve hacia adentro
+
+		const lx = mx + (cx - mx) * factor;
+		const ly = my + (cy - my) * factor;
+
+		return `<text x="${lx}" y="${ly}" text-anchor="middle">${texto}</text>`;
+	}
+
+	const svg = document.getElementById(objeto.querySelector);
+
+	svg.innerHTML = `
+		<polygon
+		points="${x1},${y1} ${x2},${y2} ${x3},${y3}"
+		fill="none"
+		stroke="black"
+		stroke-width="2"
+		/>
+
+		${letraEnLado(x1, y1, x3, y3, primeraCara.letra)}
+		${letraEnLado(x2, y2, x3, y3, segundaCara.letra)}
+		${letraEnLado(x1, y1, x2, y2, terceraCara.letra)}
+	`;
+}
+
 
 //=============================================================>>>>>
 /*
