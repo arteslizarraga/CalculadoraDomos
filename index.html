@@ -10,20 +10,28 @@
 		
 	</head>
 	<style>
-		svg {
-			border: 1px solid #ccc;
+		/* 1. Estilos para el contenedor: Flexbox con envoltura */
+		#dibujar-triangulos {
+			display: flex;
+			flex-wrap: wrap; /* ¡Clave! Permite que los elementos pasen a la línea de abajo */
+			justify-content: flex-start; /* Alinea los elementos a la izquierda */
+			padding: 10px;
+			border: 2px solid #ddd; /* Contenedor visual */
 		}
+
+		svg {
+			/* El tamaño del SVG debe ser consistente con la lógica de dibujo */
+			width: 350px; 
+			height: 300px;
+			border: 1px solid #ccc;
+			margin: 10px; /* Separación entre triángulos */
+		}
+	
+		/* Estilos para las letras */
 		text {
 			font-size: 18px;
 			font-family: Arial, sans-serif;
 			font-weight: bold;
-		}
-
-		/* Layout en grilla */
-		#dibujar-triangulos {
-			display: grid;
-			grid-template-columns: repeat(auto-fill, 300px);
-			gap: 16px;
 		}
 	</style>
 <body>
@@ -267,6 +275,14 @@ const seleccionarDomo = (() =>
 
 seleccionarDomo();
 
+//==============================================================================>>>>>>>
+//==============================================================================>>>>>>>
+// 14-12-2025
+
+const MEDIDA_H_NORMALIZADA = 1.3998; 
+const LONGITUD_H_PX = 200; 
+const ESCALA_BASE = LONGITUD_H_PX / MEDIDA_H_NORMALIZADA;
+
 function dibujarTriangulos()
 {
 	var arregloDibujarTriangulos = [];
@@ -291,97 +307,100 @@ function dibujarTriangulos()
 		});
 	});
 
-	//console.log(arregloDibujarTriangulos);
-
-	document.querySelector("#dibujar-triangulos").innerHTML =
-	arregloDibujarTriangulos.map(x =>
-		`<svg id="${x.querySelector}"></svg>`
-	).join("");
+	document.querySelector("#dibujar-triangulos").innerHTML = arregloDibujarTriangulos.map(x => 
+	{
+		return `<svg id="${x.querySelector}"></svg>`; // El tamaño se define en CSS
+	}).join("");
 
 	arregloDibujarTriangulos.forEach(x => dibujarTriangulo(x));
 }
 
-function dibujarTriangulo(data) 
+function dibujarTriangulo(objeto) 
 {
-  // 1. CONFIGURACIÓN GENERAL
-  const SVG_SIZE = 300;
-  const MARGIN = 30;
-  const DRAW_AREA = SVG_SIZE - MARGIN * 2;
+    const cara1 = objeto.primeraCara;
+    const cara2 = objeto.segundaCara;
+    const cara3 = objeto.terceraCara;
 
-  const svg = document.getElementById(data.querySelector);
-  svg.setAttribute("width", SVG_SIZE);
-  svg.setAttribute("height", SVG_SIZE);
+    let A, B, C;
 
-  // 2. LADOS REALES
-  const sideA = data.primeraCara.medida;
-  const sideB = data.segundaCara.medida;
-  const sideC = data.terceraCara.medida;
+    // Aplicar ESCALA_BASE a todas las medidas, excepto si es el lado "H"
+    A = (cara1.letra === 'H') ? LONGITUD_H_PX : cara1.medida * ESCALA_BASE;
+    B = (cara2.letra === 'H') ? LONGITUD_H_PX : cara2.medida * ESCALA_BASE;
+    C = (cara3.letra === 'H') ? LONGITUD_H_PX : cara3.medida * ESCALA_BASE;
 
-  // 3. ESCALA (NORMALIZACIÓN)
-  const maxSide = Math.max(sideA, sideB, sideC);
-  const scale = DRAW_AREA / maxSide;
+    let L1, L2, BASE;
 
-  const A = sideA * scale;
-  const B = sideB * scale;
-  const C = sideC * scale;
+    // Estrategia de Encaje
+    if (cara2.letra === 'H') {
+        BASE = B;
+        L1 = A;
+        L2 = C;
+    } else {
+        BASE = C;
+        L1 = A;
+        L2 = B;
+    }
 
-  // 4. GEOMETRÍA DEL TRIÁNGULO
-  // Base: C
-  const height = Math.sqrt(A * A - (C * C) / 4);
+    const paddingX = 20;
+    const paddingY = 270;
 
-  // 5. POSICIÓN CENTRADA
-  const offsetX = (SVG_SIZE - C) / 2;
-  const offsetY = (SVG_SIZE + height) / 2;
+    const x1 = paddingX, y1 = paddingY;
+    const x2 = x1 + BASE, y2 = y1;
 
-  const p1 = { x: offsetX,        y: offsetY };
-  const p2 = { x: offsetX + C,    y: offsetY };
-  const p3 = { x: offsetX + C / 2,y: offsetY - height };
+    const h = (L1 * L1 - L2 * L2 + BASE * BASE) / (2 * BASE);
+    const altura = Math.sqrt(L1 * L1 - h * h);
 
-  // 6. CENTROIDE
-  const center = {
-    x: (p1.x + p2.x + p3.x) / 3,
-    y: (p1.y + p2.y + p3.y) / 3
-  };
+    const x3 = x1 + h;
+    const y3 = y1 - altura;
 
-  // 7. TEXTO HACIA ADENTRO
-  function labelBetween(a, b, text) 
-  {
-    const mid = {
-      x: (a.x + b.x) / 2,
-      y: (a.y + b.y) / 2
-    };
+    if (isNaN(altura) || altura <= 0) {
+        const svg = document.getElementById(objeto.querySelector);
+        svg.innerHTML = `<text x="50" y="50" fill="red">
+            Error: Medidas no forman un triángulo válido.
+        </text>`;
+        return;
+    }
 
-    const factor = 0.2;
+    const cx = (x1 + x2 + x3) / 3;
+    const cy = (y1 + y2 + y3) / 3;
 
-    const pos = {
-      x: mid.x + (center.x - mid.x) * factor,
-      y: mid.y + (center.y - mid.y) * factor
-    };
-
-    return `
-      <text x="${pos.x}" y="${pos.y}"
+    function letraEnLado(xa, ya, xb, yb, texto) {
+        const mx = (xa + xb) / 2;
+        const my = (ya + yb) / 2;
+        const factor = 0.2;
+        const lx = mx + (cx - mx) * factor;
+        const ly = my + (cy - my) * factor;
+        return `<text x="${lx}" y="${ly}"
             text-anchor="middle"
-            dominant-baseline="middle">
-        ${text}
-      </text>
+            alignment-baseline="middle">${texto}</text>`;
+    }
+
+    let caraBase_Lado, caraL1_Lado, caraL2_Lado;
+
+    if (cara2.letra === 'H') {
+        caraBase_Lado = cara2;
+        caraL1_Lado = cara1;
+        caraL2_Lado = cara3;
+    } else {
+        caraBase_Lado = cara3;
+        caraL1_Lado = cara1;
+        caraL2_Lado = cara2;
+    }
+
+    const svg = document.getElementById(objeto.querySelector);
+
+    svg.innerHTML = `
+        <polygon
+            points="${x1},${y1} ${x2},${y2} ${x3},${y3}"
+            fill="none"
+            stroke="black"
+            stroke-width="2"
+        />
+        ${letraEnLado(x1, y1, x3, y3, caraL1_Lado.letra)}
+        ${letraEnLado(x2, y2, x3, y3, caraL2_Lado.letra)}
+        ${letraEnLado(x1, y1, x2, y2, caraBase_Lado.letra)}
     `;
-  }
-
-  // 8. DIBUJO FINAL
-  svg.innerHTML = `
-    <polygon
-      points="${p1.x},${p1.y} ${p2.x},${p2.y} ${p3.x},${p3.y}"
-      fill="none"
-      stroke="black"
-      stroke-width="1"
-    />
-
-    ${labelBetween(p1, p3, data.primeraCara.letra)}
-    ${labelBetween(p2, p3, data.segundaCara.letra)}
-    ${labelBetween(p1, p2, data.terceraCara.letra)}
-  `;
 }
-
 
 //=============================================================>>>>>
 /*

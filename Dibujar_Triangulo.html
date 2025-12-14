@@ -2,93 +2,150 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Triángulos con letras</title>
+<title>Triángulo con letras bien centradas - Modificado para Encaje Horizontal</title>
 <style>
-  svg {
-    border: 1px solid #ccc;
-  }
-  text {
-    font-size: 18px;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-  }
+/* 1. Estilos para el contenedor: Flexbox con envoltura */
+#dibujar-triangulos {
+display: flex;
+flex-wrap: wrap; /* ¡Clave! Permite que los elementos pasen a la línea de abajo */
+justify-content: flex-start; /* Alinea los elementos a la izquierda */
+padding: 10px;
+border: 2px solid #ddd; /* Contenedor visual */
+}
 
-  /* Layout en grilla */
-  #dibujar-triangulos {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    gap: 16px;
-  }
+svg {
+/* El tamaño del SVG debe ser consistente con la lógica de dibujo */
+width: 350px; 
+height: 300px;
+border: 1px solid #ccc;
+margin: 10px; /* Separación entre triángulos */
+}
+  
+/* Estilos para las letras */
+text {
+font-size: 18px;
+font-family: Arial, sans-serif;
+font-weight: bold;
+}
 </style>
 </head>
 <body>
 
-<div id="dibujar-triangulos"></div>
+  <h1>Triángulos para Encaje de Lado H</h1>
+  <p>Los triángulos se muestran horizontalmente y se ajustan al ancho de la página.</p>
+
+    <div id="dibujar-triangulos"></div>
 
 <script>
 
-var arregloDibujarTriangulos = [
-  {"querySelector":"I-H-I","primeraCara":{"letra":"I","medida":1.4081},"segundaCara":{"letra":"H","medida":1.3998},"terceraCara":{"letra":"I","medida":1.4081}},
-  {"querySelector":"G-H-G","primeraCara":{"letra":"G","medida":1.3384},"segundaCara":{"letra":"H","medida":1.3998},"terceraCara":{"letra":"G","medida":1.3384}},
-  {"querySelector":"D-F-G","primeraCara":{"letra":"D","medida":1.3183},"segundaCara":{"letra":"F","medida":1.2871},"terceraCara":{"letra":"G","medida":1.3384}},
-  {"querySelector":"C-D-E","primeraCara":{"letra":"C","medida":1.1824},"segundaCara":{"letra":"D","medida":1.3183},"terceraCara":{"letra":"E","medida":1.218}},
-  {"querySelector":"C-B-C","primeraCara":{"letra":"C","medida":1.1824},"segundaCara":{"letra":"B","medida":1.2381},"terceraCara":{"letra":"C","medida":1.1824}},
-  {"querySelector":"A-B-A","primeraCara":{"letra":"A","medida":1.0567},"segundaCara":{"letra":"B","medida":1.2381},"terceraCara":{"letra":"A","medida":1.0567}}
-];
+// --- Lógica de Dibujo (Sin Cambios) ---
 
-document.querySelector("#dibujar-triangulos").innerHTML =
-  arregloDibujarTriangulos.map(x =>
-    `<svg id="${x.querySelector}" width="300" height="300"></svg>`
-  ).join("");
+const MEDIDA_H_NORMALIZADA = 1.3998; 
+const LONGITUD_H_PX = 200; 
+const ESCALA_BASE = LONGITUD_H_PX / MEDIDA_H_NORMALIZADA;
+
+var arregloDibujarTriangulos = [{"querySelector":"I-H-I","primeraCara":{"letra":"I","medida":1.4081},"segundaCara":{"letra":"H","medida":1.3998},"terceraCara":{"letra":"I","medida":1.4081}},{"querySelector":"G-H-G","primeraCara":{"letra":"G","medida":1.3384},"segundaCara":{"letra":"H","medida":1.3998},"terceraCara":{"letra":"G","medida":1.3384}},{"querySelector":"D-F-G","primeraCara":{"letra":"D","medida":1.3183},"segundaCara":{"letra":"F","medida":1.2871},"terceraCara":{"letra":"G","medida":1.3384}},{"querySelector":"C-D-E","primeraCara":{"letra":"C","medida":1.1824},"segundaCara":{"letra":"D","medida":1.3183},"terceraCara":{"letra":"E","medida":1.218}},{"querySelector":"C-B-C","primeraCara":{"letra":"C","medida":1.1824},"segundaCara":{"letra":"B","medida":1.2381},"terceraCara":{"letra":"C","medida":1.1824}},{"querySelector":"A-B-A","primeraCara":{"letra":"A","medida":1.0567},"segundaCara":{"letra":"B","medida":1.2381},"terceraCara":{"letra":"A","medida":1.0567}}, {"querySelector":"X-Y-Z","primeraCara":{"letra":"X","medida":1.4000},"segundaCara":{"letra":"Y","medida":1.3000},"terceraCara":{"letra":"Z","medida":1.2000}}, {"querySelector":"P-Q-R","primeraCara":{"letra":"P","medida":1.0000},"segundaCara":{"letra":"Q","medida":1.1000},"terceraCara":{"letra":"R","medida":1.2000}}];
+
+// 2. Modificación: En lugar de una tabla, insertamos los elementos SVG directamente
+document.querySelector("#dibujar-triangulos").innerHTML = arregloDibujarTriangulos.map(x => 
+{
+  return `<svg id="${x.querySelector}"></svg>`; // El tamaño se define en CSS
+}).join("");
 
 arregloDibujarTriangulos.forEach(x => dibujarTriangulo(x));
 
-function dibujarTriangulo(objeto) 
+// Dibuja un triángulo en el SVG especificado por 'objeto'
+function dibujarTriangulo(objeto)
 {
-  const { primeraCara, segundaCara, terceraCara } = objeto;
-  const escala = 150;
+    const cara1 = objeto.primeraCara; 
+    const cara2 = objeto.segundaCara; 
+    const cara3 = objeto.terceraCara; 
 
-  const A = primeraCara.medida * escala;
-  const C = terceraCara.medida * escala;
+    let A, B, C;
 
-  // Vértices
-  const x1 = 50, y1 = 250;
-  const x2 = x1 + C, y2 = y1;
+    // Aplicar ESCALA_BASE a todas las medidas, excepto si es el lado "H"
+    A = (cara1.letra === 'H') ? LONGITUD_H_PX : cara1.medida * ESCALA_BASE;
+    B = (cara2.letra === 'H') ? LONGITUD_H_PX : cara2.medida * ESCALA_BASE;
+    C = (cara3.letra === 'H') ? LONGITUD_H_PX : cara3.medida * ESCALA_BASE;
 
-  const altura = Math.sqrt(A*A - (C/2)*(C/2));
-  const x3 = x1 + C / 2, y3 = y1 - altura;
+    let L1, L2, BASE; 
 
-  // Centroide
-  const cx = (x1 + x2 + x3) / 3;
-  const cy = (y1 + y2 + y3) / 3;
+    // Estrategia de Encaje: Si el lado B (segundaCara) es 'H', lo colocamos como la base.
+    if (cara2.letra === 'H') {
+        BASE = B; 
+        L1 = A;
+        L2 = C;
+    } else {
+        // Si no está 'H' (ej. D-F-G), usamos el lado C como base por defecto
+        BASE = C;
+        L1 = A;
+        L2 = B;
+    }
 
-  function letraEnLado(xa, ya, xb, yb, texto) {
-    const mx = (xa + xb) / 2;
-    const my = (ya + yb) / 2;
-    const factor = 0.2;
+    // Vértices de la Base
+    const paddingX = 20; 
+    const paddingY = 270; 
 
-    const lx = mx + (cx - mx) * factor;
-    const ly = my + (cy - my) * factor;
+    const x1 = paddingX, y1 = paddingY;
+    const x2 = x1 + BASE, y2 = y1;
 
-    return `<text x="${lx}" y="${ly}" text-anchor="middle">${texto}</text>`;
-  }
+    // Cálculo genérico del tercer vértice
+    const h = (L1*L1 - L2*L2 + BASE*BASE) / (2 * BASE);
+    const altura = Math.sqrt(L1*L1 - h*h);
 
-  const svg = document.getElementById(objeto.querySelector);
+    const x3 = x1 + h;
+    const y3 = y1 - altura;
 
-  svg.innerHTML = `
-    <polygon
-      points="${x1},${y1} ${x2},${y2} ${x3},${y3}"
-      fill="none"
-      stroke="black"
-      stroke-width="1"
-    />
+    if (isNaN(altura) || altura <= 0) {
+        const svg = document.getElementById(objeto.querySelector);
+        svg.innerHTML = `<text x="50" y="50" fill="red">Error: Medidas no forman un triángulo válido.</text>`;
+        return;
+    }
 
-    ${letraEnLado(x1, y1, x3, y3, primeraCara.letra)}
-    ${letraEnLado(x2, y2, x3, y3, segundaCara.letra)}
-    ${letraEnLado(x1, y1, x2, y2, terceraCara.letra)}
-  `;
+    // Centroide
+    const cx = (x1 + x2 + x3) / 3;
+    const cy = (y1 + y2 + y3) / 3;
+
+    // Función para centrar la letra
+    function letraEnLado(xa, ya, xb, yb, texto) {
+        const mx = (xa + xb) / 2;
+        const my = (ya + yb) / 2;
+        const factor = 0.2; 
+        const lx = mx + (cx - mx) * factor;
+        const ly = my + (cy - my) * factor;
+        return `<text x="${lx}" y="${ly}" text-anchor="middle" alignment-baseline="middle">${texto}</text>`;
+    }
+
+    // Asignación de caras para las letras
+    let caraBase_Lado, caraL1_Lado, caraL2_Lado;
+
+    if (cara2.letra === 'H') {
+        caraBase_Lado = cara2; // Base (H)
+        caraL1_Lado = cara1;
+        caraL2_Lado = cara3;
+    } else {
+        caraBase_Lado = cara3; // Base (Por defecto)
+        caraL1_Lado = cara1;
+        caraL2_Lado = cara2;
+    }
+
+    const svg = document.getElementById(objeto.querySelector);
+    
+    svg.innerHTML = `
+      <polygon
+        points="${x1},${y1} ${x2},${y2} ${x3},${y3}"
+        fill="none"
+        stroke="black"
+        stroke-width="2"
+      />
+
+      ${letraEnLado(x1, y1, x3, y3, caraL1_Lado.letra)} 
+      ${letraEnLado(x2, y2, x3, y3, caraL2_Lado.letra)} 
+      ${letraEnLado(x1, y1, x2, y2, caraBase_Lado.letra)} 
+    `;
 }
 
 </script>
+
 </body>
 </html>
